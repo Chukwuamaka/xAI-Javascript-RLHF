@@ -76,16 +76,17 @@
     let gameWon = false;
 
     function startGame() {
-        board = Array(boardSize).fill().map(() => Array(boardSize).fill(0));
-        score = 0;
-        gameWon = false;
+        // board = Array(boardSize).fill().map(() => Array(boardSize).fill(0));
+        // score = 0;
+        // gameWon = false;
         document.getElementById('current-score').innerText = score;
         document.getElementById('game-over').style.display = 'none';
-        addNewTile(); 
+        addNewTile(4);
+        addNewTile(2); 
         renderBoard();
     }
 
-    function addNewTile() {
+    function addNewTile(num) {
         let emptyCells = [];
         for(let i = 0; i < boardSize; i++) {
             for(let j = 0; j < boardSize; j++) {
@@ -95,6 +96,7 @@
         if(emptyCells.length > 0) {
             const spot = emptyCells[Math.floor(Math.random() * emptyCells.length)];
             board[spot.x][spot.y] = Math.random() < 0.9 ? 2 : 4;
+            // board[spot.x][spot.y] = num ? num : Math.random() < 0.9 ? 2 : 4;
         }
     }
 
@@ -149,7 +151,7 @@
         }
 
         if(hasMoved) {
-            addNewTile();
+            addNewTile(); // Add only one tile after a move
             renderBoard();
             document.getElementById('current-score').innerText = score;
             checkGameOver();
