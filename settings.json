@@ -1,0 +1,19 @@
+{
+  "terminal.integrated.rendererType": "dom",
+  "terminal.integrated.shell.windows": "C:\\WINDOWS\\Sysnative\\cmd.exe",
+  "terminal.external.windowsExec": "C:\\Windows\\sysnative\\cmd.exe",
+  "webhint.enableTelemetry": "enabled",
+  "editor.suggestSelection": "first",
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "git.autofetch": true,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "screencastMode.onlyKeyboardShortcuts": true,
+  "diffEditor.maxComputationTime": 0,
+  "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.tabSize": 2,
+  "git.openRepositoryInParentFolders": "never",
+  "githubPullRequests.pullBranch": "never",
+  "editor.fontLigatures": false,
+}
