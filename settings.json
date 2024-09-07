@@ -15,5 +15,5 @@
   "editor.tabSize": 2,
   "git.openRepositoryInParentFolders": "never",
   "githubPullRequests.pullBranch": "never",
-  "editor.fontLigatures": false,
+  "editor.fontLigatures": false
 }
