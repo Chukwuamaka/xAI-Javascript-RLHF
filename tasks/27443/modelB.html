@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>60-Second Challenge Quiz</title>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<style>
+    body { font-family: Arial, sans-serif; }
+    #quiz-container { max-width: 800px; margin: auto; text-align: center; }
+    #timer { position: fixed; top: 10px; right: 10px; font-size: 24px; }
+    .button { padding: 10px 20px; margin: 10px; cursor: pointer; }
+    #question-area, #scoreboard { display: none; }
+    .choice { margin: 10px; padding: 10px; border: 1px solid #ccc; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div id="quiz-container">
+    <h1>60-Second Challenge Quiz</h1>
+    <div id="subject-selection">
+        <button class="button" onclick="startGame('Math')">Mathematics</button>
+        <button class="button" onclick="startGame('English')">English</button>
+    </div>
+    <div id="question-area"></div>
+    <div id="timer">60</div>
+    <div id="scoreboard">
+        <h2>Results</h2>
+        <p id="result"></p>
+    </div>
+</div>
+
+<script>
+    const questions = {
+        'Math': [
+            {q: "What is 2 + 2?", a: ["3", "4", "5", "6"], correct: 1},
+            // Add more math questions...
+        ],
+        'English': [
+            {q: "What is the past tense of 'eat'?", a: ["ate", "eated", "eating", "eats"], correct: 0},
+            // Add more English questions...
+        ]
+    };
+
+    let currentPlayer = 1, score = {1: 0, 2: 0}, timeLeft = 60, currentQuestions, timer;
+
+    function startGame(subject) {
+        currentQuestions = questions[subject];
+        document.getElementById('subject-selection').style.display = 'none';
+        document.getElementById('question-area').style.display = 'block';
+        loadQuestion();
+        startTimer();
+    }
+
+    function loadQuestion() {
+        let q = currentQuestions[Math.floor(Math.random() * currentQuestions.length)];
+        document.getElementById('question-area').innerHTML = `
+            <h3>${q.q}</h3>
+            ${q.a.map((ans, idx) => `<div class="choice" onclick="checkAnswer(${idx})">${ans}</div>`).join('')}
+        `;
+    }
+
+    function checkAnswer(selected) {
+        if (selected === currentQuestions[currentQuestions.length - 1].correct) score[currentPlayer]++;
+        if (currentQuestions.length > 1) {
+            currentQuestions.pop();
+            loadQuestion();
+        } else {
+            endGame();
+        }
+    }
+
+    function startTimer() {
+        timer = setInterval(() => {
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                endGame();
+            } else {
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft;
+            }
+        }, 1000);
+    }
+
+    function endGame() {
+        document.getElementById('question-area').style.display = 'none';
+        document.getElementById('scoreboard').style.display = 'block';
+        let result = `Player 1: ${score[1]} points, Player 2: ${score[2]} points. `;
+        result += (score[1] > score[2]) ? "Player 1 wins!" : (score[1] < score[2] ? "Player 2 wins!" : "It's a tie!");
+        document.getElementById('result').textContent = result;
+    }
+</script>
+
+</body>
+</html>

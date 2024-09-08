@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>60-Second Challenge Quiz</title>
+<style>
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.quiz-container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 80%;
+    max-width: 600px;
+}
+#timer {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 2em;
+}
+button {
+    padding: 10px 15px;
+    margin: 5px;
+    border: none;
+    background-color: #5cb85c;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+button:hover { background-color: #4cae4c; }
+#options button {
+    display: block;
+    width: 100%;
+    text-align: left;
+}
+#scoreBoard {
+    margin-top: 20px;
+    text-align: center;
+}
+</style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div id="timer">60</div>
+    <h1>60-Second Challenge Quiz</h1>
+    <div id="subjectSelect">
+        <button onclick="startGame('Math')">Mathematics</button>
+        <button onclick="startGame('English')">English</button>
+    </div>
+    <div id="quiz" style="display:none;">
+        <h2 id="question">Question</h2>
+        <div id="options"></div>
+        <p>Player 1 Score: <span id="player1Score">0</span> | Player 2 Score: <span id="player2Score">0</span></p>
+    </div>
+    <div id="scoreBoard" style="display:none;"></div>
+</div>
+
+<script>
+let questionsMath = [
+    {q: "2 + 2 = ?", a: "4", options: ["3", "4", "5", "6"]},
+    // Add more math questions here
+];
+
+let questionsEnglish = [
+    {q: "Choose the correct verb: He ___ to the store.", a: "went", options: ["go", "went", "going", "goes"]},
+    // Add more English questions here
+];
+
+let currentPlayer = 1;
+let scores = {1: 0, 2: 0};
+let timeLeft = 60;
+let timer;
+let currentQuestions;
+
+function startGame(subject) {
+    document.getElementById('subjectSelect').style.display = 'none';
+    document.getElementById('quiz').style.display = 'block';
+    currentQuestions = subject === 'Math' ? questionsMath : questionsEnglish;
+    nextQuestion();
+    startTimer();
+}
+
+function startTimer() {
+    timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer').textContent = timeLeft;
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            endGame();
+        }
+    }, 1000);
+}
+
+function nextQuestion() {
+    if (currentQuestions.length === 0) {
+        endGame();
+        return;
+    }
+    let q = currentQuestions.shift();
+    document.getElementById('question').textContent = q.q;
+    let optionsHtml = '';
+    q.options.forEach(option => {
+        optionsHtml += `<button onclick="checkAnswer('${option}', '${q.a}')">${option}</button>`;
+    });
+    document.getElementById('options').innerHTML = optionsHtml;
+}
+
+function checkAnswer(selected, answer) {
+    if (selected === answer) {
+        scores[currentPlayer]++;
+        document.getElementById(`player${currentPlayer}Score`).textContent = scores[currentPlayer];
+    }
+    nextQuestion();
+}
+
+function endGame() {
+    document.getElementById('quiz').style.display = 'none';
+    document.getElementById('timer').style.display = 'none';
+    document.getElementById('scoreBoard').style.display = 'block';
+    let winner = scores[1] > scores[2] ? 'Player 1' : (scores[1] < scores[2] ? 'Player 2' : 'It\'s a tie!');
+    document.getElementById('scoreBoard').innerHTML = `<h2>Game Over!</h2><p>Player 1: ${scores[1]} | Player 2: ${scores[2]}</p><p><strong>${winner} wins!</strong></p>`;
+    // Optionally reset game here or add a restart button
+}
+
+</script>
+</body>
+</html>
