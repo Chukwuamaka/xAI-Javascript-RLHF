@@ -24,6 +24,13 @@
       text-align: center;
       width: 600px;
     }
+    #title {
+      margin-bottom: 4px;
+    }
+    #copy {
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
     .hidden {
       display: none;
     }
@@ -65,7 +72,10 @@
 
   <div class="quiz-container">
     <div id="start-screen">
-      <h2>Sixty-Second Challenge Quiz</h2>
+      <h2 id="title">60 Seconds Of Fame</h2>
+      <p id="copy">
+        Answer as many questions as you can in 60 Seconds
+      </p>
       <p>Choose a subject:</p>
       <button onclick="startQuiz('math')">Mathematics</button>
       <button onclick="startQuiz('english')">English</button>
@@ -154,155 +164,154 @@
       { question: '25 ÷ 5 = ?', options: ['5', '6', '4', '3'], correct: 0 },
       { question: '45 ÷ 5 = ?', options: ['8', '9', '7', '6'], correct: 1 },
     ];
- // An array containing all the English questions.
-const englishQuestions = [
-  { question: 'What is the antonym of "good"?', options: ['Bad', 'Nice', 'Great', 'Beautiful'], correct: 0 },
-  { question: 'Which word is a noun?', options: ['Run', 'Walk', 'Cat', 'Quick'], correct: 2 },
-  { question: 'Find the synonym of "happy"?', options: ['Sad', 'Excited', 'Joyful', 'Angry'], correct: 2 },
-  { question: 'Choose the correct form of "to be" for "I ____ going to the market."', options: ['am', 'is', 'are', 'were'], correct: 0 },
-  { question: 'What is the past tense of "run"?', options: ['Ran', 'Runs', 'Running', 'Runned'], correct: 0 },
-  { question: 'Which sentence is correct?', options: ['She go to school', 'She goes to school', 'She going to school', 'She is go to school'], correct: 1 },
-  { question: 'What is the plural of "child"?', options: ['Childs', 'Children', 'Childrens', 'Childes'], correct: 1 },
-  { question: 'Which word is an adjective?', options: ['Quick', 'Eat', 'Running', 'Books'], correct: 0 },
-  { question: 'What is the past tense of "eat"?', options: ['Eat', 'Eaten', 'Ate', 'Eating'], correct: 2 },
-  { question: 'Choose the correct sentence:', options: ['I is happy', 'I am happy', 'I be happy', 'I were happy'], correct: 1 },
-  { question: 'Which word is an adverb?', options: ['Quickly', 'Run', 'Big', 'He'], correct: 0 },
-  { question: 'Find the synonym of "big"?', options: ['Small', 'Huge', 'Fast', 'Tall'], correct: 1 },
-  { question: 'What is the opposite of "strong"?', options: ['Weak', 'Powerful', 'Fast', 'Tall'], correct: 0 },
-  { question: 'Which sentence is correct?', options: ['I has a car', 'I have a car', 'I haves a car', 'I will has a car'], correct: 1 },
-  { question: 'Choose the correct form of "to be" for "They ____ going to the park."', options: ['is', 'am', 'are', 'was'], correct: 2 },
-  { question: 'What is the past tense of "go"?', options: ['Goes', 'Went', 'Gone', 'Going'], correct: 1 },
-  { question: 'Which word is a verb?', options: ['Eat', 'Happy', 'Book', 'Quick'], correct: 0 },
-  { question: 'What is the opposite of "cold"?', options: ['Warm', 'Hot', 'Chilly', 'Frozen'], correct: 1 },
-  { question: 'Choose the correct sentence:', options: ['She is go to the store', 'She went to the store', 'She is went to the store', 'She going to the store'], correct: 1 },
-  { question: 'What is the plural of "foot"?', options: ['Feet', 'Foots', 'Feets', 'Footes'], correct: 0 },
-  { question: 'Find the synonym of "smart"?', options: ['Dumb', 'Intelligent', 'Lazy', 'Quick'], correct: 1 },
-  { question: 'What is the opposite of "fast"?', options: ['Quick', 'Slow', 'Late', 'Speedy'], correct: 1 },
-  { question: 'Which word is a pronoun?', options: ['He', 'Jump', 'Book', 'Happy'], correct: 0 },
-  { question: 'Choose the correct form of "to be" for "You ____ my friend."', options: ['are', 'is', 'am', 'was'], correct: 0 },
-  { question: 'What is the past tense of "see"?', options: ['Saw', 'Seen', 'Sees', 'Seeing'], correct: 0 },
-  { question: 'Which word is a conjunction?', options: ['And', 'Run', 'Quick', 'Tall'], correct: 0 },
-  { question: 'What is the opposite of "up"?', options: ['Down', 'Above', 'Forward', 'Away'], correct: 0 },
-  { question: 'Which word is a preposition?', options: ['Under', 'Run', 'Fast', 'Strong'], correct: 0 },
-  { question: 'Find the synonym of "happy"?', options: ['Sad', 'Joyful', 'Angry', 'Lazy'], correct: 1 },
-  { question: 'What is the opposite of "old"?', options: ['Young', 'Small', 'Big', 'New'], correct: 0 },
-  { question: 'Which word is an article?', options: ['The', 'Quick', 'Run', 'Jump'], correct: 0 },
-  { question: 'Choose the correct sentence:', options: ['We was going', 'We are going', 'We is going', 'We were go'], correct: 1 },
-  { question: 'What is the plural of "mouse"?', options: ['Mouses', 'Mice', 'Mouse', 'Mices'], correct: 1 },
-  { question: 'Find the synonym of "difficult"?', options: ['Easy', 'Hard', 'Simple', 'Weak'], correct: 1 },
-  { question: 'What is the opposite of "near"?', options: ['Far', 'Close', 'Next', 'Nearby'], correct: 0 },
-  { question: 'Which word is an interjection?', options: ['Wow', 'Run', 'Jump', 'Big'], correct: 0 },
-  { question: 'What is the opposite of "high"?', options: ['Low', 'Tall', 'Fast', 'Far'], correct: 0 },
-  { question: 'What is the plural of "tooth"?', options: ['Tooths', 'Teeth', 'Toothes', 'Teeths'], correct: 1 },
-  { question: 'Find the synonym of "strong"?', options: ['Weak', 'Powerful', 'Fast', 'Smart'], correct: 1 },
-  { question: 'What is the opposite of "black"?', options: ['White', 'Blue', 'Dark', 'Bright'], correct: 0 },
-  { question: 'Which word is a verb?', options: ['Run', 'Fast', 'Big', 'Quick'], correct: 0 },
-  { question: 'Choose the correct sentence:', options: ['She was sleeping', 'She is sleep', 'She are sleeping', 'She will sleeps'], correct: 0 },
-  { question: 'What is the plural of "man"?', options: ['Men', 'Mans', 'Manes', 'Manses'], correct: 0 },
-  { question: 'Find the synonym of "quick"?', options: ['Slow', 'Fast', 'Late', 'Early'], correct: 1 },
-  { question: 'What is the opposite of "early"?', options: ['Late', 'Soon', 'Fast', 'Quick'], correct: 0 },
-  { question: 'What is the past tense of "write"?', options: ['Wrote', 'Writes', 'Written', 'Writing'], correct: 0 },
-  { question: 'Which word is a pronoun?', options: ['She', 'Fast', 'Run', 'Big'], correct: 0 },
-  { question: 'What is the opposite of "day"?', options: ['Night', 'Morning', 'Evening', 'Noon'], correct: 0 },
-  { question: 'What is the plural of "leaf"?', options: ['Leaves', 'Leafs', 'Leafes', 'Leavs'], correct: 0 },
-  { question: 'Find the synonym of "fun"?', options: ['Boring', 'Exciting', 'Sad', 'Angry'], correct: 1 },
-  { question: 'What is the opposite of "begin"?', options: ['End', 'Start', 'Begin', 'Run'], correct: 0 },
-  { question: 'Which word is an adverb?', options: ['Quickly', 'Run', 'Fast', 'Strong'], correct: 0 },
-  { question: 'Choose the correct form of "to be" for "They ____ going to the park."', options: ['is', 'am', 'are', 'was'], correct: 2 },
-  { question: 'What is the past tense of "go"?', options: ['Goes', 'Went', 'Gone', 'Going'], correct: 1 },
-  { question: 'Which word is a verb?', options: ['Eat', 'Happy', 'Book', 'Quick'], correct: 0 },
-  { question: 'What is the opposite of "cold"?', options: ['Warm', 'Hot', 'Chilly', 'Frozen'], correct: 1 },
-  { question: 'Choose the correct sentence:', options: ['She is go to the store', 'She went to the store', 'She is went to the store', 'She going to the store'], correct: 1 },
-  { question: 'What is the plural of "foot"?', options: ['Feet', 'Foots', 'Feets', 'Footes'], correct: 0 },
-  { question: 'Find the synonym of "smart"?', options: ['Dumb', 'Intelligent', 'Lazy', 'Quick'], correct: 1 },
-  { question: 'What is the opposite of "fast"?', options: ['Quick', 'Slow', 'Late', 'Speedy'], correct: 1 },
-  { question: 'What is the plural of "goose"?', options: ['Geese', 'Gooses', 'Goos', 'Geeses'], correct: 0 },
-];
 
-// Variables used in the JavaScript program
-let currentQuestionIndex = 0;
-let score = 0;
-let timeLeft = 60;
-let chosenSubject = '';
-let timerInterval;
+    // An array containing all the English questions.
+    const englishQuestions = [
+      { question: 'What is the antonym of "good"?', options: ['Bad', 'Nice', 'Great', 'Beautiful'], correct: 0 },
+      { question: 'Which word is a noun?', options: ['Run', 'Walk', 'Cat', 'Quick'], correct: 2 },
+      { question: 'Find the synonym of "happy"?', options: ['Sad', 'Excited', 'Joyful', 'Angry'], correct: 2 },
+      { question: 'Choose the correct form of "to be" for "I ____ going to the market."', options: ['am', 'is', 'are', 'were'], correct: 0 },
+      { question: 'What is the past tense of "run"?', options: ['Ran', 'Runs', 'Running', 'Runned'], correct: 0 },
+      { question: 'Which sentence is correct?', options: ['She go to school', 'She goes to school', 'She going to school', 'She is go to school'], correct: 1 },
+      { question: 'What is the plural of "child"?', options: ['Childs', 'Children', 'Childrens', 'Childes'], correct: 1 },
+      { question: 'Which word is an adjective?', options: ['Quick', 'Eat', 'Running', 'Books'], correct: 0 },
+      { question: 'What is the past tense of "eat"?', options: ['Eat', 'Eaten', 'Ate', 'Eating'], correct: 2 },
+      { question: 'Choose the correct sentence:', options: ['I is happy', 'I am happy', 'I be happy', 'I were happy'], correct: 1 },
+      { question: 'Which word is an adverb?', options: ['Quickly', 'Run', 'Big', 'He'], correct: 0 },
+      { question: 'Find the synonym of "big"?', options: ['Small', 'Huge', 'Fast', 'Tall'], correct: 1 },
+      { question: 'What is the opposite of "strong"?', options: ['Weak', 'Powerful', 'Fast', 'Tall'], correct: 0 },
+      { question: 'Which sentence is correct?', options: ['I has a car', 'I have a car', 'I haves a car', 'I will has a car'], correct: 1 },
+      { question: 'Choose the correct form of "to be" for "They ____ going to the park."', options: ['is', 'am', 'are', 'was'], correct: 2 },
+      { question: 'What is the past tense of "go"?', options: ['Goes', 'Went', 'Gone', 'Going'], correct: 1 },
+      { question: 'Which word is a verb?', options: ['Eat', 'Happy', 'Book', 'Quick'], correct: 0 },
+      { question: 'What is the opposite of "cold"?', options: ['Warm', 'Hot', 'Chilly', 'Frozen'], correct: 1 },
+      { question: 'Choose the correct sentence:', options: ['She is go to the store', 'She went to the store', 'She is went to the store', 'She going to the store'], correct: 1 },
+      { question: 'What is the plural of "foot"?', options: ['Feet', 'Foots', 'Feets', 'Footes'], correct: 0 },
+      { question: 'Find the synonym of "smart"?', options: ['Dumb', 'Intelligent', 'Lazy', 'Quick'], correct: 1 },
+      { question: 'What is the opposite of "fast"?', options: ['Quick', 'Slow', 'Late', 'Speedy'], correct: 1 },
+      { question: 'Which word is a pronoun?', options: ['He', 'Jump', 'Book', 'Happy'], correct: 0 },
+      { question: 'Choose the correct form of "to be" for "You ____ my friend."', options: ['are', 'is', 'am', 'was'], correct: 0 },
+      { question: 'What is the past tense of "see"?', options: ['Saw', 'Seen', 'Sees', 'Seeing'], correct: 0 },
+      { question: 'Which word is a conjunction?', options: ['And', 'Run', 'Quick', 'Tall'], correct: 0 },
+      { question: 'What is the opposite of "up"?', options: ['Down', 'Above', 'Forward', 'Away'], correct: 0 },
+      { question: 'Which word is a preposition?', options: ['Under', 'Run', 'Fast', 'Strong'], correct: 0 },
+      { question: 'Find the synonym of "happy"?', options: ['Sad', 'Joyful', 'Angry', 'Lazy'], correct: 1 },
+      { question: 'What is the opposite of "old"?', options: ['Young', 'Small', 'Big', 'New'], correct: 0 },
+      { question: 'Which word is an article?', options: ['The', 'Quick', 'Run', 'Jump'], correct: 0 },
+      { question: 'Choose the correct sentence:', options: ['We was going', 'We are going', 'We is going', 'We were go'], correct: 1 },
+      { question: 'What is the plural of "mouse"?', options: ['Mouses', 'Mice', 'Mouse', 'Mices'], correct: 1 },
+      { question: 'Find the synonym of "difficult"?', options: ['Easy', 'Hard', 'Simple', 'Weak'], correct: 1 },
+      { question: 'What is the opposite of "near"?', options: ['Far', 'Close', 'Next', 'Nearby'], correct: 0 },
+      { question: 'Which word is an interjection?', options: ['Wow', 'Run', 'Jump', 'Big'], correct: 0 },
+      { question: 'What is the opposite of "high"?', options: ['Low', 'Tall', 'Fast', 'Far'], correct: 0 },
+      { question: 'What is the plural of "tooth"?', options: ['Tooths', 'Teeth', 'Toothes', 'Teeths'], correct: 1 },
+      { question: 'Find the synonym of "strong"?', options: ['Weak', 'Powerful', 'Fast', 'Smart'], correct: 1 },
+      { question: 'What is the opposite of "black"?', options: ['White', 'Blue', 'Dark', 'Bright'], correct: 0 },
+      { question: 'Which word is a verb?', options: ['Run', 'Fast', 'Big', 'Quick'], correct: 0 },
+      { question: 'Choose the correct sentence:', options: ['She was sleeping', 'She is sleep', 'She are sleeping', 'She will sleeps'], correct: 0 },
+      { question: 'What is the plural of "man"?', options: ['Men', 'Mans', 'Manes', 'Manses'], correct: 0 },
+      { question: 'Find the synonym of "quick"?', options: ['Slow', 'Fast', 'Late', 'Early'], correct: 1 },
+      { question: 'What is the opposite of "early"?', options: ['Late', 'Soon', 'Fast', 'Quick'], correct: 0 },
+      { question: 'What is the past tense of "write"?', options: ['Wrote', 'Writes', 'Written', 'Writing'], correct: 0 },
+      { question: 'Which word is a pronoun?', options: ['She', 'Fast', 'Run', 'Big'], correct: 0 },
+      { question: 'What is the opposite of "day"?', options: ['Night', 'Morning', 'Evening', 'Noon'], correct: 0 },
+      { question: 'What is the plural of "leaf"?', options: ['Leaves', 'Leafs', 'Leafes', 'Leavs'], correct: 0 },
+      { question: 'Find the synonym of "fun"?', options: ['Boring', 'Exciting', 'Sad', 'Angry'], correct: 1 },
+      { question: 'What is the opposite of "begin"?', options: ['End', 'Start', 'Begin', 'Run'], correct: 0 },
+      { question: 'Which word is an adverb?', options: ['Quickly', 'Run', 'Fast', 'Strong'], correct: 0 },
+      { question: 'Choose the correct form of "to be" for "They ____ going to the park."', options: ['is', 'am', 'are', 'was'], correct: 2 },
+      { question: 'What is the past tense of "go"?', options: ['Goes', 'Went', 'Gone', 'Going'], correct: 1 },
+      { question: 'Which word is a verb?', options: ['Eat', 'Happy', 'Book', 'Quick'], correct: 0 },
+      { question: 'What is the opposite of "cold"?', options: ['Warm', 'Hot', 'Chilly', 'Frozen'], correct: 1 },
+      { question: 'Choose the correct sentence:', options: ['She is go to the store', 'She went to the store', 'She is went to the store', 'She going to the store'], correct: 1 },
+      { question: 'What is the plural of "foot"?', options: ['Feet', 'Foots', 'Feets', 'Footes'], correct: 0 },
+      { question: 'Find the synonym of "smart"?', options: ['Dumb', 'Intelligent', 'Lazy', 'Quick'], correct: 1 },
+      { question: 'What is the opposite of "fast"?', options: ['Quick', 'Slow', 'Late', 'Speedy'], correct: 1 },
+      { question: 'What is the plural of "goose"?', options: ['Geese', 'Gooses', 'Goos', 'Geeses'], correct: 0 },
+    ];
 
-// Function to start the quiz based on subject selection
-function startQuiz(subject) {
-  chosenSubject = subject;
-  currentQuestionIndex = 0;
-  score = 0;
-  timeLeft = 60;
+    // Variables used in the JavaScript program
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let timeLeft = 60;
+    let chosenSubject = '';
+    let timerInterval;
 
-  document.getElementById('start-screen').classList.add('hidden');
-  document.getElementById('quiz-screen').classList.remove('hidden');
-  document.getElementById('scoreboard-screen').classList.add('hidden');
+    // Function to start the quiz based on subject selection
+    function startQuiz(subject) {
+      chosenSubject = subject;
+      currentQuestionIndex = 0;
+      score = 0;
+      timeLeft = 60;
 
-  loadQuestion();
-  startTimer();
-}
+      document.getElementById('start-screen').classList.add('hidden');
+      document.getElementById('quiz-screen').classList.remove('hidden');
+      document.getElementById('scoreboard-screen').classList.add('hidden');
 
-// Function to load questions
-function loadQuestion() {
-  const questions = chosenSubject === 'math' ? mathQuestions : englishQuestions;
-  
-  // Reset the question index to 0 when all questions are answered
-  if (currentQuestionIndex >= questions.length) {
-    currentQuestionIndex = 0;
-  }
-
-  const currentQuestion = questions[currentQuestionIndex];
-
-  document.getElementById('question').textContent = currentQuestion.question;
-  document.getElementById('option1').textContent = currentQuestion.options[0];
-  document.getElementById('option2').textContent = currentQuestion.options[1];
-  document.getElementById('option3').textContent = currentQuestion.options[2];
-  document.getElementById('option4').textContent = currentQuestion.options[3];
-}
-
-// Function to check the answer
-function checkAnswer(selectedOption) {
-  const questions = chosenSubject === 'math' ? mathQuestions : englishQuestions;
-  const currentQuestion = questions[currentQuestionIndex];
-
-  if (selectedOption === currentQuestion.correct) {
-    score++;
-  }
-
-  currentQuestionIndex++;
-  loadQuestion(); 
-}
-
-// Timer function
-function startTimer() {
-  document.getElementById('timer').textContent = `Time: ${timeLeft}`;
-
-  timerInterval = setInterval(() => {
-    timeLeft--;
-    document.getElementById('timer').textContent = `Time: ${timeLeft}`;
-
-    if (timeLeft <= 0) {
-      endQuiz();
+      loadQuestion();
+      startTimer();
     }
-  }, 1000);
-}
 
-// End quiz function
-function endQuiz() {
-  clearInterval(timerInterval);
-  document.getElementById('quiz-screen').classList.add('hidden');
-  document.getElementById('scoreboard-screen').classList.remove('hidden');
-  document.getElementById('score').textContent = `Score: ${score}`;
-}
+    // Function to load questions
+    function loadQuestion() {
+      const questions = chosenSubject === 'math' ? mathQuestions : englishQuestions;
+      
+      // Reset the question index to 0 when all questions are answered
+      if (currentQuestionIndex >= questions.length) {
+        currentQuestionIndex = 0;
+      }
 
-// Restart the quiz
-function restartQuiz() {
-  document.getElementById('start-screen').classList.remove('hidden');
-  document.getElementById('quiz-screen').classList.add('hidden');
-  document.getElementById('scoreboard-screen').classList.add('hidden');
-  clearInterval(timerInterval);
-}
-</script>
+      const currentQuestion = questions[currentQuestionIndex];
 
+      document.getElementById('question').textContent = currentQuestion.question;
+      document.getElementById('option1').textContent = currentQuestion.options[0];
+      document.getElementById('option2').textContent = currentQuestion.options[1];
+      document.getElementById('option3').textContent = currentQuestion.options[2];
+      document.getElementById('option4').textContent = currentQuestion.options[3];
+    }
 
+    // Function to check the answer
+    function checkAnswer(selectedOption) {
+      const questions = chosenSubject === 'math' ? mathQuestions : englishQuestions;
+      const currentQuestion = questions[currentQuestionIndex];
+
+      if (selectedOption === currentQuestion.correct) {
+        score++;
+      }
+
+      currentQuestionIndex++;
+      loadQuestion(); 
+    }
+
+    // Timer function
+    function startTimer() {
+      document.getElementById('timer').textContent = `Time: ${timeLeft}`;
+
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer').textContent = `Time: ${timeLeft}`;
+
+        if (timeLeft <= 0) {
+          endQuiz();
+        }
+      }, 1000);
+    }
+
+    // End quiz function
+    function endQuiz() {
+      clearInterval(timerInterval);
+      document.getElementById('quiz-screen').classList.add('hidden');
+      document.getElementById('scoreboard-screen').classList.remove('hidden');
+      document.getElementById('score').textContent = score;
+    }
+
+    // Restart the quiz
+    function restartQuiz() {
+      document.getElementById('start-screen').classList.remove('hidden');
+      document.getElementById('quiz-screen').classList.add('hidden');
+      document.getElementById('scoreboard-screen').classList.add('hidden');
+      clearInterval(timerInterval);
+    }
+  </script>
 </body>
 </html>
