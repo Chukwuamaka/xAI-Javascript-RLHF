@@ -2,138 +2,131 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>60-Second Challenge Quiz</title>
 <style>
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f4f9;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-.quiz-container {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    width: 80%;
-    max-width: 600px;
-}
-#timer {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: 2em;
-}
-button {
-    padding: 10px 15px;
-    margin: 5px;
-    border: none;
-    background-color: #5cb85c;
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
-}
-button:hover { background-color: #4cae4c; }
-#options button {
-    display: block;
-    width: 100%;
-    text-align: left;
-}
-#scoreBoard {
-    margin-top: 20px;
-    text-align: center;
-}
+    body {
+        font-family: 'Arial', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+        margin: 0;
+    }
+    #quiz-container {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+    button {
+        margin: 10px;
+        padding: 10px 20px;
+        cursor: pointer;
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+    #timer {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        font-size: 1.5em;
+    }
+    .hide {
+        display: none;
+    }
 </style>
 </head>
 <body>
 
-<div class="quiz-container">
-    <div id="timer">60</div>
-    <h1>60-Second Challenge Quiz</h1>
-    <div id="subjectSelect">
-        <button onclick="startGame('Math')">Mathematics</button>
-        <button onclick="startGame('English')">English</button>
+<div id="quiz-container">
+    <div id="start-screen">
+        <h1>60-Second Challenge Quiz</h1>
+        <button onclick="startQuiz('Math')">Mathematics</button>
+        <button onclick="startQuiz('English')">English</button>
     </div>
-    <div id="quiz" style="display:none;">
-        <h2 id="question">Question</h2>
+    
+    <div id="quiz" class="hide">
+        <div id="timer"></div>
+        <h2 id="question"></h2>
         <div id="options"></div>
-        <p>Player 1 Score: <span id="player1Score">0</span> | Player 2 Score: <span id="player2Score">0</span></p>
+        <p>Score: <span id="score">0</span></p>
     </div>
-    <div id="scoreBoard" style="display:none;"></div>
+    
+    <div id="end-screen" class="hide">
+        <h2>Time's Up!</h2>
+        <p>Your Score: <span id="final-score"></span></p>
+        <button onclick="location.reload()">Play Again</button>
+    </div>
 </div>
 
 <script>
-let questionsMath = [
-    {q: "2 + 2 = ?", a: "4", options: ["3", "4", "5", "6"]},
-    // Add more math questions here
-];
+    const questions = {
+        'Math': [
+            {q: "What is 2 + 2?", a: ["3", "4", "5", "6"], correct: 1},
+            //... more math questions
+        ],
+        'English': [
+            {q: "What is the synonym of 'happy'?", a: ["Sad", "Joyful", "Angry", "Neutral"], correct: 1},
+            //... more English questions
+        ]
+    };
 
-let questionsEnglish = [
-    {q: "Choose the correct verb: He ___ to the store.", a: "went", options: ["go", "went", "going", "goes"]},
-    // Add more English questions here
-];
+    let currentQuestion, score = 0, timeLeft = 60, timerInterval;
 
-let currentPlayer = 1;
-let scores = {1: 0, 2: 0};
-let timeLeft = 60;
-let timer;
-let currentQuestions;
+    function startQuiz(subject) {
+        document.getElementById('start-screen').classList.add('hide');
+        document.getElementById('quiz').classList.remove('hide');
+        loadQuestion(subject);
+        startTimer();
+    }
 
-function startGame(subject) {
-    document.getElementById('subjectSelect').style.display = 'none';
-    document.getElementById('quiz').style.display = 'block';
-    currentQuestions = subject === 'Math' ? questionsMath : questionsEnglish;
-    nextQuestion();
-    startTimer();
-}
+    function loadQuestion(subject) {
+        const q = questions[subject][Math.floor(Math.random() * questions[subject].length)];
+        currentQuestion = q;
+        document.getElementById('question').textContent = q.q;
+        const optionsDiv = document.getElementById('options');
+        optionsDiv.innerHTML = '';
+        q.a.forEach((answer, index) => {
+            const button = document.createElement('button');
+            button.textContent = answer;
+            button.onclick = () => checkAnswer(index);
+            optionsDiv.appendChild(button);
+        });
+    }
 
-function startTimer() {
-    timer = setInterval(() => {
-        timeLeft--;
-        document.getElementById('timer').textContent = timeLeft;
-        if (timeLeft <= 0) {
-            clearInterval(timer);
-            endGame();
+    function checkAnswer(selectedIndex) {
+        if (selectedIndex === currentQuestion.correct) {
+            score++;
+            document.getElementById('score').textContent = score;
         }
-    }, 1000);
-}
-
-function nextQuestion() {
-    if (currentQuestions.length === 0) {
-        endGame();
-        return;
+        loadQuestion(currentQuestion.q.startsWith("What") ? 'Math' : 'English'); // Simplistic subject switch
     }
-    let q = currentQuestions.shift();
-    document.getElementById('question').textContent = q.q;
-    let optionsHtml = '';
-    q.options.forEach(option => {
-        optionsHtml += `<button onclick="checkAnswer('${option}', '${q.a}')">${option}</button>`;
-    });
-    document.getElementById('options').innerHTML = optionsHtml;
-}
 
-function checkAnswer(selected, answer) {
-    if (selected === answer) {
-        scores[currentPlayer]++;
-        document.getElementById(`player${currentPlayer}Score`).textContent = scores[currentPlayer];
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            if (timeLeft > 0) {
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft;
+            } else {
+                endQuiz();
+            }
+        }, 1000);
     }
-    nextQuestion();
-}
 
-function endGame() {
-    document.getElementById('quiz').style.display = 'none';
-    document.getElementById('timer').style.display = 'none';
-    document.getElementById('scoreBoard').style.display = 'block';
-    let winner = scores[1] > scores[2] ? 'Player 1' : (scores[1] < scores[2] ? 'Player 2' : 'It\'s a tie!');
-    document.getElementById('scoreBoard').innerHTML = `<h2>Game Over!</h2><p>Player 1: ${scores[1]} | Player 2: ${scores[2]}</p><p><strong>${winner} wins!</strong></p>`;
-    // Optionally reset game here or add a restart button
-}
-
+    function endQuiz() {
+        clearInterval(timerInterval);
+        document.getElementById('quiz').classList.add('hide');
+        document.getElementById('final-score').textContent = score;
+        document.getElementById('end-screen').classList.remove('hide');
+    }
 </script>
+
 </body>
 </html>
