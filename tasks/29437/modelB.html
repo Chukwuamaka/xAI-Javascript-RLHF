@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Know Your Periodic Table</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; }
+        #app { width: 80%; margin: auto; text-align: center; }
+        .welcome, .quiz, .results { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        button { padding: 10px 20px; background-color: #5cb85c; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #4cae4c; }
+        input[type="text"] { margin: 10px; padding: 5px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="welcome">
+        <h1>Know Your Periodic Table</h1>
+        <button onclick="startQuiz()">Start Quiz</button>
+    </div>
+    <div class="quiz" style="display:none;">
+        <h2>Question <span id="questionNum"></span></h2>
+        <h3 id="elementSymbol"></h3>
+        <input type="text" id="nameInput" placeholder="Element Name">
+        <input type="text" id="atomicNumberInput" placeholder="Atomic Number">
+        <button onclick="nextQuestion()">Next</button>
+    </div>
+    <div class="results" style="display:none;">
+        <h2>Your Score: <span id="score"></span>/30</h2>
+        <h3>Incorrect Answers:</h3>
+        <table id="incorrectTable"></table>
+        <button onclick="location.reload()">Try Again</button>
+    </div>
+</div>
+
+<script>
+    const elements = [
+        {symbol: "H", name: "Hydrogen", atomicNumber: 1},
+        // ... (add 29 more elements for a total of 30)
+    ];
+
+    let currentQuestion = 0, score = 0;
+    const incorrectAnswers = [];
+
+    function startQuiz() {
+        document.querySelector('.welcome').style.display = 'none';
+        document.querySelector('.quiz').style.display = 'block';
+        showQuestion();
+    }
+
+    function showQuestion() {
+        if (currentQuestion < elements.length) {
+            document.getElementById('questionNum').textContent = currentQuestion + 1;
+            document.getElementById('elementSymbol').textContent = elements[currentQuestion].symbol;
+            document.getElementById('nameInput').value = '';
+            document.getElementById('atomicNumberInput').value = '';
+        } else {
+            showResults();
+        }
+    }
+
+    function nextQuestion() {
+        const userAnswerName = document.getElementById('nameInput').value.trim().toLowerCase();
+        const userAnswerAtomic = document.getElementById('atomicNumberInput').value.trim();
+        const correctName = elements[currentQuestion].name.toLowerCase();
+        const correctAtomic = elements[currentQuestion].atomicNumber.toString();
+
+        if (userAnswerName === correctName && userAnswerAtomic === correctAtomic) {
+            score++;
+        } else {
+            incorrectAnswers.push({
+                ...elements[currentQuestion],
+                userName: userAnswerName,
+                userAtomic: userAnswerAtomic
+            });
+        }
+
+        currentQuestion++;
+        showQuestion();
+    }
+
+    function showResults() {
+        document.querySelector('.quiz').style.display = 'none';
+        document.querySelector('.results').style.display = 'block';
+        document.getElementById('score').textContent = score;
+        const table = document.getElementById('incorrectTable');
+        incorrectAnswers.forEach((ans) => {
+            const row = table.insertRow();
+            row.insertCell(0).textContent = ans.symbol;
+            row.insertCell(1).textContent = ans.name;
+            row.insertCell(2).textContent = ans.atomicNumber;
+            row.insertCell(3).textContent = ans.userName;
+            row.insertCell(4).textContent = ans.userAtomic;
+        });
+    }
+</script>
+</body>
+</html>

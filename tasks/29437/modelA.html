@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Know Your Periodic Table</title>
+<style>
+    body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 0; }
+    .container { width: 80%; margin: auto; overflow: hidden; }
+    .welcome, .quiz, .result { padding: 20px; background: white; margin-top: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    button { background-color: #5cb85c; color: white; border: none; padding: 10px 20px; cursor: pointer; }
+    button:hover { background-color: #4cae4c; }
+    input[type="text"] { margin: 10px 0; padding: 10px; width: 200px; }
+    .hidden { display: none; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="welcome">
+        <h1>Welcome to Know Your Periodic Table</h1>
+        <button onclick="startQuiz()">Start Quiz</button>
+    </div>
+
+    <div class="quiz hidden">
+        <h2 id="questionNumber"></h2>
+        <h3 id="elementSymbol"></h3>
+        <input type="text" id="elementName" placeholder="Element Name">
+        <input type="text" id="atomicNumber" placeholder="Atomic Number">
+        <button onclick="nextQuestion()">Next</button>
+    </div>
+
+    <div class="result hidden">
+        <h2>Your Score: <span id="score"></span></h2>
+        <h3>Incorrect Answers:</h3>
+        <table id="incorrectAnswersTable">
+            <tr><th>Element Symbol</th><th>Your Answer</th><th>Correct Answer</th></tr>
+        </table>
+        <button onclick="location.reload()">Try Again</button>
+    </div>
+</div>
+
+<script>
+const elements = [
+    {symbol: "H", name: "Hydrogen", atomicNumber: 1},
+    {symbol: "He", name: "Helium", atomicNumber: 2},
+    // ... Add more elements here up to 30 for the quiz
+];
+
+let currentQuestion = 0;
+let score = 0;
+let incorrectAnswers = [];
+
+function startQuiz() {
+    document.querySelector('.welcome').classList.add('hidden');
+    document.querySelector('.quiz').classList.remove('hidden');
+    loadQuestion();
+}
+
+function loadQuestion() {
+    if(currentQuestion >= elements.length) {
+        endQuiz();
+        return;
+    }
+    document.getElementById('questionNumber').textContent = `Question ${currentQuestion + 1}`;
+    document.getElementById('elementSymbol').textContent = elements[currentQuestion].symbol;
+    document.getElementById('elementName').value = '';
+    document.getElementById('atomicNumber').value = '';
+}
+
+function nextQuestion() {
+    const userElementName = document.getElementById('elementName').value.trim().toLowerCase();
+    const userAtomicNumber = document.getElementById('atomicNumber').value.trim();
+    
+    if(userElementName !== elements[currentQuestion].name.toLowerCase() || 
+       parseInt(userAtomicNumber) !== elements[currentQuestion].atomicNumber) {
+        incorrectAnswers.push({
+            symbol: elements[currentQuestion].symbol,
+            userAnswer: `${userElementName} (${userAtomicNumber})`,
+            correctAnswer: `${elements[currentQuestion].name} (${elements[currentQuestion].atomicNumber})`
+        });
+    } else {
+        score++;
+    }
+
+    currentQuestion++;
+    loadQuestion();
+}
+
+function endQuiz() {
+    document.querySelector('.quiz').classList.add('hidden');
+    document.querySelector('.result').classList.remove('hidden');
+    document.getElementById('score').textContent = `${score} / ${elements.length}`;
+    
+    const table = document.getElementById('incorrectAnswersTable');
+    incorrectAnswers.forEach(answer => {
+        const row = table.insertRow();
+        row.insertCell(0).textContent = answer.symbol;
+        row.insertCell(1).textContent = answer.userAnswer;
+        row.insertCell(2).textContent = answer.correctAnswer;
+    });
+}
+</script>
+
+</body>
+</html>
