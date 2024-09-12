@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Whack-a-Mole</title>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: #f0f8ff;
+        margin: 0;
+    }
+    #gameBoard {
+        display: grid;
+        grid-template-columns: repeat(8, 50px);
+        grid-gap: 10px;
+        background: #5d4037;
+        padding: 20px;
+        border-radius: 10px;
+    }
+    .hole {
+        width: 50px;
+        height: 50px;
+        background: #000;
+        border-radius: 50%;
+        position: relative;
+        overflow: hidden;
+    }
+    .mole {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-image: url('mole.png'); /* Assume we have a mole image */
+        background-size: cover;
+        bottom: -100%;
+        transition: bottom 0.5s;
+    }
+    .mole.up {
+        bottom: 0;
+    }
+    #scoreBoard, #timer {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    #endGame {
+        display: none;
+        text-align: center;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+    }
+    .button {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+
+<div id="gameArea">
+    <div id="scoreBoard">Score: <span id="score">0</span></div>
+    <div id="timer">Time: <span id="timeLeft">60</span></div>
+    <div id="gameBoard"></div>
+    <div id="endGame">
+        <h2>Game Over!</h2>
+        <p>Your Score: <span id="finalScore"></span></p>
+        <button class="button" onclick="restartGame()">Restart Game</button>
+    </div>
+</div>
+
+<script>
+    const gameBoard = document.getElementById('gameBoard');
+    const scoreElement = document.getElementById('score');
+    const timeLeftElement = document.getElementById('timeLeft');
+    const finalScoreElement = document.getElementById('finalScore');
+    const endGameDiv = document.getElementById('endGame');
+    let score = 0;
+    let timeLeft = 60;
+    let gameInterval;
+
+    // Mole types with their properties
+    const moleTypes = {
+        'normal': { points: 1, speed: 500 },
+        'fast': { points: 2, speed: 300, sound: 'fastMole.mp3' },
+        'deceptive': { points: -1, speed: 400, sound: 'deceptiveMole.mp3' }
+    };
+
+    function createMole() {
+        const hole = document.createElement('div');
+        hole.className = 'hole';
+        const mole = document.createElement('div');
+        mole.className = 'mole';
+        const type = Object.keys(moleTypes)[Math.floor(Math.random() * Object.keys(moleTypes).length)];
+        mole.dataset.type = type;
+        hole.appendChild(mole);
+        gameBoard.appendChild(hole);
+
+        // Mole appears
+        setTimeout(() => {
+            mole.classList.add('up');
+            // Mole disappears after a while
+            setTimeout(() => {
+                mole.classList.remove('up');
+                setTimeout(() => hole.remove(), 500); // Remove after animation
+            }, moleTypes[type].speed);
+        }, 100);
+
+        mole.onclick = function() {
+            if (mole.classList.contains('up')) {
+                hitMole(type);
+            }
+        };
+    }
+
+    function hitMole(type) {
+        if (moleTypes[type].points > 0) {
+            score += moleTypes[type].points;
+            playSound('hit.mp3');
+        } else {
+            score += moleTypes[type].points; // This could be negative
+            playSound(moleTypes[type].sound);
+        }
+        scoreElement.textContent = score;
+    }
+
+    function playSound(soundFile) {
+        new Audio(soundFile).play();
+    }
+
+    function gameLoop() {
+        if(timeLeft > 0) {
+            createMole();
+            timeLeft--;
+            timeLeftElement.textContent = timeLeft;
+        } else {
+            endGame();
+        }
+    }
+
+    function endGame() {
+        clearInterval(gameInterval);
+        finalScoreElement.textContent = score;
+        gameBoard.innerHTML = ''; // Clear the board
+        endGameDiv.style.display = 'block';
+    }
+
+    function restartGame() {
+        score = 0;
+        timeLeft = 60;
+        scoreElement.textContent = score;
+        timeLeftElement.textContent = timeLeft;
+        endGameDiv.style.display = 'none';
+        gameInterval = setInterval(gameLoop, 1000);
+    }
+
+    // Start game
+    restartGame();
+</script>
+
+</body>
+</html>
