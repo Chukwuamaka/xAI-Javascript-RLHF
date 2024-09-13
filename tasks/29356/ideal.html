@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Weatherly</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(to right, #83a4d4, #b6fbff);
+        background-size: cover;
+        transition: background-image 1s ease-in-out;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+    .weather-container {
+        background: rgba(255, 255, 255, 0.85);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        width: 400px;
+    }
+    h2 {
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+    input, select, button {
+        width: 100%;
+        height: 40px;
+        outline: 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-top: 5px;
+        margin-bottom: 10px;
+    }
+    button {
+        background-color: #83a4d4;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    button:hover {
+        background-color: #b6fbff;
+    }
+    .forecast {
+        margin-top: 15px;
+        display: none;
+    }
+    .day {
+        margin: 5px 0;
+        padding: 10px;
+        background: #fff;
+        border: 1px solid black;
+        border-radius: 5px;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    .fade-in {
+        animation: fadeIn 1s;
+    }
+    .required-field::after {
+        content: "*";
+        color: red;
+        margin-left: 2px;
+    }
+</style>
+</head>
+<body>
+
+<div class="weather-container">
+    <h2>Weatherly</h2>
+    <form id="weatherForm">
+        <span class="required-field">Continent</span>
+        <select id="continent" required></select>
+        <span class="required-field">Country</span>
+        <select id="country" required></select>
+        <span class="required-field">City</span>
+        <input type="text" id="city" required>
+        <button type="submit">Check Forecast</button>
+    </form>
+    <div id="forecast" class="forecast"></div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // Fetch continents and countries
+        $.getJSON('https://restcountries.com/v3.1/all?fields=name,region', function(data) {
+            // Get continents and sort alphabetically
+            let continents = Array.from(new Set(data.map(country => country.region).filter(region => region))).sort();
+    
+            // Add default option for continent dropdown
+            $('#continent').append(new Option('Choose continent', ''));
+    
+            // Populate the continent select element with sorted continents
+            continents.forEach(continent => {
+                $('#continent').append(new Option(continent, continent));
+            });
+    
+            // Handle continent change event
+            $('#continent').on('change', function() {
+                // Reset and add default option to the country dropdown
+                $('#country').empty().append(new Option('Choose country', ''));
+    
+                // Filter and sort countries for the selected continent
+                let countries = data.filter(country => country.region === this.value).map(country => country.name.common).sort();
+    
+                // Add sorted countries to the country dropdown
+                $('#country').append(countries.map(country => new Option(country, country)));
+            });
+        });
+    
+        // Handle weather form submission
+        $('#weatherForm').on('submit', function(e) {
+            e.preventDefault();
+            const city = $('#city').val();
+            const country = $('#country').val();
+            
+            // Note: Replace 'YOUR_API_KEY' with your actual OpenWeatherMap API key
+            $.getJSON(`https://api.openweathermap.org/data/2.5/forecast?q=${city},${country}&appid=YOUR_API_KEY&units=metric`, function(weatherData) {
+                $('#forecast').empty().show().addClass('fade-in');
+                
+                // Display 3-day forecast
+                for (let i = 0; i < 3; i++) {
+                    let day = weatherData.list[i * 8]; // Get weather for every 24 hours
+                    let weather = day.weather[0].main.toLowerCase();
+                    
+                    function getWeatherIcon(weather) {
+                        let iconClass = '';
+                        let backgroundImage = ''
+                        switch (weather.toLowerCase()) {
+                            case 'rain':
+                            iconClass = '<i class="fas fa-cloud-showers-heavy" size="lg"></i>';
+                            backgroundImage = 'https://arewaworld.com/wp-content/uploads/2023/10/unnamed.jpg'
+                            break;
+                            case 'sun':
+                            iconClass = '<i class="fas fa-sun" size="lg"></i>';
+                            backgroundImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQdiS1K2WtTm6qumJ-KpIqVmOZkOdDu-myaQ&s'
+                            break;
+                            case 'clouds':
+                            iconClass = '<i class="fas fa-cloud" size="lg"></i>';
+                            backgroundImage = 'https://www.treehugger.com/thmb/z9XWueIDAUQI6QvXfCR6JyuFzl8=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/__opt__aboutcom__coeus__resources__content_migration__mnn__images__2018__08__CollectionOfCloudsAgainstABlueSky-8cae9f3109d14dcf98d9facc5775222f.jpg'
+                            break;
+                            case 'snow':
+                            iconClass = '<i class="fas fa-snowflake" size="lg"></i>';
+                            backgroundImage = 'https://www.wkbn.com/wp-content/uploads/sites/48/2021/01/winter-snow-snowing-snowy-winter-weather-generic-2.jpg?w=1280'
+                            break;
+                            default:
+                            iconClass = '<i class="fas fa-question-circle" size="lg"></i>';
+                            backgroundImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYIs-OSh-JqmBoYljRbxEUtg_5CK0NYFITqA&s'
+                        }
+                        return {iconClass, backgroundImage};
+                    } 
+                    $('#forecast').append(`
+                        <div class="day">
+                            <h3>${new Date(day.dt * 1000).toDateString()}</h3>
+                            <p>${getWeatherIcon(weather).iconClass} ${weather}</p>
+                            <p>Temp: ${day.main.temp}°C</p>
+                        </div>
+                    `);
+                    // Change background based on the weather condition
+                    let background = getWeatherIcon(weatherData.list[0].weather[0].main.toLowerCase()).backgroundImage;
+                    $('body').css('background-image', `url('${background}')`);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

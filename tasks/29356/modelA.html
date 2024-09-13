@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Weatherly</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-image: url('default.jpg');
+        background-size: cover;
+        transition: background-image 1s ease-in-out;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+    .weather-container {
+        background: rgba(255, 255, 255, 0.85);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        width: 300px;
+        text-align: center;
+    }
+    form {
+        margin-bottom: 20px;
+    }
+    input, select, button {
+        width: 90%;
+        padding: 10px;
+        margin: 5px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    button {
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    button:hover {
+        background-color: #45a049;
+    }
+    .forecast {
+        margin-top: 15px;
+        display: none;
+    }
+    .day {
+        margin: 10px 0;
+        padding: 10px;
+        background: #fff;
+        border-radius: 5px;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    .fade-in {
+        animation: fadeIn 1s;
+    }
+</style>
+</head>
+<body>
+
+<div class="weather-container">
+    <h2>Weatherly</h2>
+    <form id="weatherForm">
+        <input type="text" id="city" placeholder="City" required>
+        <select id="continent" required></select>
+        <select id="country" required></select>
+        <button type="submit">Check Forecast</button>
+    </form>
+    <div id="forecast" class="forecast"></div>
+</div>
+
+<script>
+$(document).ready(function() {
+    // Fetch continents and countries
+    $.getJSON('https://restcountries.com/v3.1/all?fields=name,region', function(data) {
+        let continents = new Set(data.map(country => country.region));
+        continents.forEach(continent => {
+            if(continent) $('#continent').append(new Option(continent, continent));
+        });
+        $('#continent').on('change', function() {
+            let countries = data.filter(country => country.region === this.value).map(country => country.name.common);
+            $('#country').empty().append(countries.map(country => new Option(country, country)));
+        });
+    });
+
+    $('#weatherForm').on('submit', function(e) {
+        e.preventDefault();
+        const city = $('#city').val();
+        const country = $('#country').val();
+        // Note: Replace 'YOUR_API_KEY' with your actual OpenWeatherMap API key
+        $.getJSON(`https://api.openweathermap.org/data/2.5/forecast?q=${city},${country}&appid=YOUR_API_KEY&units=metric`, function(weatherData) {
+            $('#forecast').empty().show().addClass('fade-in');
+            for(let i = 0; i < 3; i++) {
+                let day = weatherData.list[i * 8]; // Get weather every 24 hours for 3 days
+                let weather = day.weather[0].main.toLowerCase();
+                $('#forecast').append(`
+                    <div class="day">
+                        <h3>${new Date(day.dt * 1000).toDateString()}</h3>
+                        <p>${weather}</p>
+                        <p>Temp: ${day.main.temp}°C</p>
+                    </div>
+                `);
+            }
+            // Change background based on weather
+            let background = weatherData.list[0].weather[0].main.toLowerCase();
+            $('body').css('background-image', `url('${background}.jpg')`);
+        });
+    });
+});
+</script>
+
+</body>
+</html>

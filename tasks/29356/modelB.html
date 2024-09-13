@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weatherly</title>
+<style>
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #83a4d4, #b6fbff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    color: #333;
+    transition: background 1s;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 2em;
+    border-radius: 30px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+input, select, button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background: #ecf0f1;
+}
+
+button {
+    background: #3498db;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #2980b9;
+}
+
+.forecast {
+    margin-top: 20px;
+    text-align: center;
+    animation: fadeIn 2s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.weather-icon {
+    font-size: 48px;
+    margin: 10px 0;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Weatherly</h1>
+    <form id="weatherForm">
+        <div class="form-group">
+            <input type="text" id="city" placeholder="City" required>
+        </div>
+        <div class="form-group">
+            <select id="continent" required></select>
+        </div>
+        <div class="form-group">
+            <select id="country" required></select>
+        </div>
+        <button type="submit">Check Forecast</button>
+    </form>
+    <div id="forecast" class="forecast" style="display:none;"></div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+    const continentSelect = document.getElementById('continent');
+    const countrySelect = document.getElementById('country');
+    const form = document.getElementById('weatherForm');
+    const forecastDiv = document.getElementById('forecast');
+
+    // Fetch continents (simplified for example; in reality, use an API)
+    const continents = ['Africa', 'Asia', 'Europe', 'North America', 'South America', 'Australia', 'Antarctica'];
+    continents.forEach(continent => {
+        let option = document.createElement('option');
+        option.value = option.text = continent;
+        continentSelect.appendChild(option);
+    });
+
+    // Placeholder for dynamic country fetching based on continent
+    continentSelect.addEventListener('change', function() {
+        // Here you would typically fetch countries based on the continent
+        // For now, we'll just clear and add a placeholder
+        countrySelect.innerHTML = '<option value="">Select Country</option>';
+    });
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const city = document.getElementById('city').value;
+        const country = countrySelect.value;
+        if(city && country) {
+            // API key should be stored securely, not in client-side JS
+            const apiKey = 'YOUR_OPENWEATHERMAP_API_KEY';
+            fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city},${country}&appid=${apiKey}&units=metric`)
+            .then(response => response.json())
+            .then(data => {
+                forecastDiv.style.display = 'block';
+                let weatherHTML = '';
+                for(let i = 0; i < 3; i++) {
+                    const weather = data.list[i * 8]; // Assuming 3-hour intervals, 8th entry for day
+                    const weatherType = weather.weather[0].main.toLowerCase();
+                    const icon = weatherType === 'clear' ? '☀️' : weatherType === 'clouds' ? '☁️' : weatherType === 'rain' ? '🌧️' : '❄️';
+                    weatherHTML += `
+                        <div>
+                            <h2>Day ${i + 1}</h2>
+                            <p class="weather-icon">${icon}</p>
+                            <p>${weather.weather[0].description}</p>
+                            <p>Temp: ${weather.main.temp}°C</p>
+                        </div>
+                    `;
+                    document.body.style.background = `linear-gradient(to right, ${weatherType === 'rain' ? '#7f7fd5' : weatherType === 'snow' ? '#e6e6fa' : weatherType === 'clouds' ? '#bdc3c7' : '#87CEEB'}, ${weatherType === 'rain' ? '#86a8e7' : weatherType === 'snow' ? '#f5fffa' : weatherType === 'clouds' ? '#ecf0f1' : '#b6fbff'})`;
+                }
+                forecastDiv.innerHTML = weatherHTML;
+            })
+            .catch(error => {
+                forecastDiv.innerHTML = 'Failed to fetch weather data. Please try again.';
+                console.error('Error:', error);
+            });
+        }
+    });
+});
+</script>
+</body>
+</html>
